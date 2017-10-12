@@ -11,3 +11,24 @@ function sideClose() {
 $("#continue").on("click", function (){
 	$("#firstOverlay").slideUp(3000);
 })
+
+$("#homeButton").on("click", function(){
+    $("#home").show();
+    $("#howTo").hide();
+    $("#contact").hide();
+});
+
+$("#howToButton").on("click", function(){
+    $("#home").hide();
+    $("#howTo").show();
+    $("#contact").hide();
+});
+
+$("#contactButton").on("click", function(){
+    $("#home").hide();
+    $("#howTo").hide();
+    $("#contact").show();
+});
+
+$("#howTo").hide();
+$("#contact").hide();
