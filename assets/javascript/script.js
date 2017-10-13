@@ -9,7 +9,7 @@ function sideClose() {
 }
 
 $("#continue").on("click", function (){
-	$("#firstOverlay").slideUp(3000);
+	$("#firstOverlay").slideUp(1500);
 })
 
 $("#homeButton").on("click", function(){
