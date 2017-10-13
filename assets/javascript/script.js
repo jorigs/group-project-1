@@ -1,3 +1,5 @@
+zip = 5;
+
 function sideOpen() {
     document.getElementById("mySidebar").style.display = "block";
     document.getElementById("myOverlay").style.display = "block";
@@ -32,3 +34,11 @@ $("#contactButton").on("click", function(){
 
 $("#howTo").hide();
 $("#contact").hide();
+$("#continue").prop("disabled", true);
+
+$("#inputField").on("keyup", function() {
+  $("#continue").prop("disabled", false);
+  if( $("#inputField").val() == '') {
+    $("#continue").prop("disabled", true);
+ }
+});
