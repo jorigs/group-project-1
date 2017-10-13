@@ -1,6 +1,6 @@
 body {
-    color: #000!important;
-    background-color: #f1f1f1;
+    color: rgba(42, 45, 52, 1);;
+    background-color:black;
 }
 
 /* overlay on load */
@@ -12,7 +12,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(139, 104, 127, .4);
     z-index: 4;
 }
 
@@ -21,14 +21,14 @@ body {
     width: 70%;
     text-align: center;
     top: 30%;
-    background-color: darkgray;
+    background-color: rgba(236, 235, 228, 1);
     padding: 15px;
     left: 10%;
     border-style: ridge;
-    border-radius: 5px;
-    border-width: 5px;
-    border-color: lightcoral;
-}s
+    /* border-radius: 1px; */
+    border-width: 3px;
+    border-color: rgba(139, 104, 127, 1);
+}
 
 /* continue button found in locationBox */
 #continue {
@@ -39,25 +39,26 @@ body {
 .sidebar {
     height: 100%;
     width: 200px;
-    background-color: #fff;
-    position: fixed!important;
+    background-color: hsla(192%, 25%, 70%, 1);
+    position: fixed;
     z-index: 1;
     overflow: auto;
+    padding:50px;
 }
 /* navigation within sidebar */
 .nav-color {
-    color: #000!important;
-    background-color: #fff!important;
+    color: rgba(42, 45, 52, 1);
+    background-color: #fff;
 }
 
 .close {
-        font-size: 64px!important;
+        font-size: 64px;
         float: right;
         animation: animateright 0.4s;
 }
 
 .opacity {
-    animation: opac 0.8s;
+    animation: opac 0.3s;
 }
 
 /* overlay active while sidebar is open */
@@ -94,10 +95,11 @@ body {
 /* google map functionality. (Temporary?) */
 #googlemaps { 
     height: 75%;
-    width: 93%;
+    width: 50%;
     position: absolute;
     z-index: 0;
     margin-right: 15px;
+    padding: 25px;
 }
 
 
@@ -135,8 +137,8 @@ body {
 /* remove main content margins to adapt page to mobile view */
 @media screen and (max-width: 992px){
 .mainPage {
-    margin-left: 0!important;
-    margin-right: 0!important;
+    margin-left: 0;
+    margin-right: 0;
 }}
 
 /* resize google maps on desktop view */
@@ -151,7 +153,6 @@ body {
     width: 30%;
     text-align: center;
     top: 30%;
-    background-color: darkgray;
     padding: 15px;
     left: 35%;
     }}
