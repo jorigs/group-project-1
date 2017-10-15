@@ -2,31 +2,31 @@ function sideOpen() {
     document.getElementById("mySidebar").style.display = "block";
     document.getElementById("myOverlay").style.display = "block";
 }
- 
+
 function sideClose() {
     document.getElementById("mySidebar").style.display = "none";
     document.getElementById("myOverlay").style.display = "none";
 }
 
-$("#continue").on("click", function (){
-	$("#locationBox").addClass('animated bounceOutDown')
+$("#continue").on("click", function () {
+    $("#locationBox").addClass('animated bounceOutDown')
     $("#firstOverlay").slideUp(1500);
-    
+
 })
 
-$("#homeButton").on("click", function(){
+$("#homeButton").on("click", function () {
     $("#home").show();
     $("#howTo").hide();
     $("#contact").hide();
 });
 
-$("#howToButton").on("click", function(){
+$("#howToButton").on("click", function () {
     $("#home").hide();
     $("#howTo").show();
     $("#contact").hide();
 });
 
-$("#contactButton").on("click", function(){
+$("#contactButton").on("click", function () {
     $("#home").hide();
     $("#howTo").hide();
     $("#contact").show();
@@ -36,67 +36,105 @@ $("#howTo").hide();
 $("#contact").hide();
 $("#continue").prop("disabled", true);
 
-$("#inputField").on("keyup", function() {
-  $("#continue").prop("disabled", false);
-  if( $("#inputField").val() == '') {
-    $("#continue").prop("disabled", true);
- }
+$("#inputField").on("keyup", function () {
+    $("#continue").prop("disabled", false);
+    if ($("#inputField").val() == '') {
+        $("#continue").prop("disabled", true);
+    }
 });
 
-// Note: This example requires that you consent to location sharing when
-      // prompted by your browser. If you see the error "The Geolocation service
-      // failed.", it means you probably did not give permission for the browser to
-      // locate you.
-var address;
-var map;
 
- var request = {
-    location: address,
-    radius: '500',
-    types: ['store']
+
+
+
+var geocoder;
+var map;
+var pyrmont = {
+        lat: -33.867,
+        lng: 151.195
+    };
+
+var request = {
+    location: pyrmont,
+    radius: '5000',
+    types: ['library', 'cafe']
   };
 
-function initMap() {
-        map = new google.maps.Map(document.getElementById('googlemaps'), {
-          zoom: 10,
-          center: {lat: -34.397, lng: 150.644}
-        });
-        var geocoder = new google.maps.Geocoder();
 
-        document.getElementById('continue').addEventListener('click', function() {
-          geocodeAddress(geocoder, map);
-        });
-      }
 
-      function geocodeAddress(geocoder, resultsMap) {
-        address = document.getElementById('inputField').value;
-        geocoder.geocode({'address': address}, function(results, status) {
-          if (status === 'OK') {
-            resultsMap.setCenter(results[0].geometry.location);
+function initialize() {
+
+    map = new google.maps.Map(document.getElementById('googlemaps'), {
+        zoom: 5,
+        center: new google.maps.LatLng(10, 10)
+    });
+
+    geocoder = new google.maps.Geocoder();
+
+    // Set focus to address field
+    document.getElementById('inputField').focus();
+
+    // Bind click event listener for search button
+    document.getElementById("continue").addEventListener('click', codeAddress, false);
+
+    // Bind key-up event listener for address field
+    document.getElementById("inputField").addEventListener('keyup', function (event) {
+
+        // Check the event key code
+        if (event.keyCode == 13) {
+
+            // Key code 13 == Enter key was pressed (and released)
+            codeAddress();
+            
+        }
+    });
+}
+
+function codeAddress() {
+
+    var address = document.getElementById("inputField").value;
+
+    geocoder.geocode({
+        'address': address,
+    }, function (results, status) {
+
+        if (status == google.maps.GeocoderStatus.OK) {
+
+            map.setCenter(results[0].geometry.location);
+
+           pyrmont.lng = results[0].geometry.bounds["b"].b;
+           pyrmont.lat = results[0].geometry.bounds["f"].b;
+console.log(pyrmont)
             var marker = new google.maps.Marker({
-              map: resultsMap,
-              position: results[0].geometry.location
+                map: map,
+                position: results[0].geometry.location
+                
+            
+            
             });
-          } else {
-            alert('Geocode was not successful for the following reason: ' + status);
-          }
-        });
-      }
+            places();
+console.log(pyrmont)
+
+            
+        } else {
+            alert("Geocode was not successful for the following reason: " + status);
+        }
+    });
+    console.log('running21')
+    
+}
+
+document.body.onload = initialize();
 
 
-
-
-
-    // Specify location, radius and place types for your Places API search.
-
-
-  // Create the PlaceService and send the request.
-  // Handle the callback with an anonymous function.
-  var service = new google.maps.places.PlacesService(map);
+function places(){
+var service = new google.maps.places.PlacesService(map);
   service.nearbySearch(request, function(results, status) {
     if (status == google.maps.places.PlacesServiceStatus.OK) {
       for (var i = 0; i < results.length; i++) {
         var place = results[i];
+          
+          console.log(place);
         // If the request succeeds, draw the place location on
         // the map as a marker, and register an event to handle a
         // click on the marker.
@@ -107,55 +145,16 @@ function initMap() {
       }
     }
   });
-
-// Run the initialize function when the window has finished loading.
-google.maps.event.addDomListener(window, 'load', initialize);
-
+  
+}
 
 
-  /*    
-      var map, infoWindow;
-      
-      function initMap() {
-        map = new google.maps.Map(document.getElementById('googlemaps'), {
-          center: {lat: -34.397, lng: 150.644},
-          zoom: 6
-        });
-        infoWindow = new google.maps.InfoWindow;
+$("#filterLibrary").on('click', function(){
+    request.types = ['library']
+    codeAddress();
+})
 
-        // Try HTML5 geolocation.
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
-
-            infoWindow.setPosition(pos);
-            infoWindow.setContent('Location found.');
-            infoWindow.open(map);
-            map.setCenter(pos);
-          }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
-          });
-        } else {
-            $("#continue").on("click", function(){
-                var zipCode = $("#inputField").val();
-                var pos = {
-                    lat: zipCode.coords.latitude,
-                    lng: zipCode.coords.longitude
-                }
-            })
-          // Browser doesn't support Geolocation
-          
-        }
-      }
-
-      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-        infoWindow.setPosition(pos);
-        infoWindow.setContent(browserHasGeolocation ?
-                              'Error: The Geolocation service failed.' :
-                              'Error: Your browser doesn\'t support geolocation.');
-        infoWindow.open(map);
-      };
-*/
+$("#filterCafe").on('click', function(){
+    request.types = ['Cafe']
+    places();
+})
