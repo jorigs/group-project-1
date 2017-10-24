@@ -1,114 +1,145 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<title>Project Template</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-   
-  <link rel="stylesheet" href="./assets/css/reset.css">
-    <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-  <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
-    <!-- Linking CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
-  <link rel="stylesheet" href="./assets/css/style.css">
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDESJdR-22mTw_jOFGhkKgZxPG4OVjllLc&libraries=places"></script>
 
-</head>
-<style>
-body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
-</style>
-<body style="max-width:1600px">
+    <head>
+        <title>Spotty - Study Spot Finder</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Permanent+Marker|Raleway|Raleway+Dots|Roboto|Roboto+Condensed|Roboto+Mono|Source+Code+Pro"
+            rel="stylesheet">
+        <link href="assets/js/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
+        <link href="assets/css/style.css" rel="stylesheet">
+        <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.4.0/firebaseui.css" />
+        <script src="https://www.gstatic.com/firebasejs/4.5.1/firebase.js"></script>
 
-<!-- Overylay effect on page load-->
-<div class="initialOverlay opacity hide-large" style="cursor:pointer; display: block" title="close side menu" id="firstOverlay">
-  <div class="col" id="locationBox">
-    <p>Welcome to Spotty! We will help you find the perfect place to study based on your preferences!<br> Enter your ZIP to Get Started!</p>
-    <Label>ZIP Code</Label><input id="inputField" type="text" pattern="[0-9]{5}" title="Five digit zip code" />
-    <div class="contBtn"><button  id="continue"><span>Continue</span></button></div>
-  </div>
-</div>
+    </head>
 
+    <body max-width="1600px">
 
-<!-- Sidebar/menu -->
-<nav class="sidebar w3-animate-left sideCollapse nav-color" style="z-index:3;width:300px;" id="mySidebar"><br>
-  <div class="container">
-    <a href="#" onclick="sideClose()" class="close hide-large" title="close menu">
-      <i class="fa fa-remove"></i>
-    </a>
-    <h4><b>Filters</b></h4>
-    <p style="color:#757575!important">Select Your Filters</p>
-  </div>
-    
-<!-- Filter Form -->
-  <form action="/action_page.php" method="get" style="font-size: 25px; color:black;">
-          Filter 1: Libraries Only<input type="checkbox" name="filter" value="filter1" style="height: 22px;
-    width: 25px;" id="filterLibrary"><br>
-          Filter 2: Cafe Only<input type="checkbox" name="filter" value="filter2" style="height: 22px;
-    width: 25px;" id="filterCafe"><br>
-        </form>
-</nav>
+        <div id="wrapper">
+            <div id="firebaseui-auth-container"></div>
+            <!-- Sidebar -->
+            <div id="sidebar-wrapper">
+                <ul class="sidebar-nav">
+                    <li class="sidebar-brand">
+                        <h3 class="text-center">
+                            Select Your <br>Filters
+                        </h3>
+                    </li>
+                    <li>
+                        <p>Libraries : <input class="filterInput" type="checkbox" name="filter" value="library" id="libraries"></p>
+                    </li>
+                    <li>
+                        <p>Cafes : <input class="filterInput" type="checkbox" name="filter" value="cafe" id="cafe"></p>
+                    </li>
+                    <li>
+                        <p>Book Stores : <input class="filterInput" type="checkbox" name="filter" value="book_store" id="bookStores"></p>
+                    </li>
+                    <li>
+                        <p>Parks : <input class="filterInput" type="checkbox" name="filter" value="park" id="park"></p>
+                    </li>
+                    <li>
+                        <p>Bakeries : <input class="filterInput" type="checkbox" name="filter" value="bakery" id="bakery"></p>
+                    </li>
+                    <li>
+                        <p>Bars : <input class="filterInput" type="checkbox" name="filter" value="bar" id="bar"></p>
+                    </li>
+                </ul>
+            </div>
+            <!-- /#sidebar-wrapper -->
 
-<!-- Overlay effect when opening sidebar on small screens -->
-<div class="overlay opacity hide-large" onclick="sideClose()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+            <!-- Page Content -->
+            <div id="page-content-wrapper">
+                <div class="container-fluid">
+                    <div class="jumbotron text-center" id='jumbo'>
+                        <h1>Spotty</h1>
+                        <p>Welcome to Spotty! We will help you find the perfect place to study based on your preferences!<br>                            Enter your ZIP Code to Get Started!</p>
+                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#myModal">Enter Zip Code</button>
+                        <a href="#menu-toggle" class="btn btn-secondary" id="menu-toggle">Filter Results</a>
+                    </div>
+                    <!-- Where Google Maps Functionality Lives -->
+                    <section class="googleMap">
+                        <div id="maps"></div>
+                    </section>
 
+                    <secton class="aboutUs text-center">
+                        <div id="bio">
+                            <h2>About Us</h2>
+                            <p>Spotty was born from the growing frustration of students and remote workers alike. Coming into
+                                this world with the sole purpose of helping those with hectic home lives, desperate caffein
+                                addictions to fuel those tedious house and a safe place to go to work in groups so no one
+                                has to sacrifice their personal space.
+                                <br> Though Spotty might be simple now, it has big dreams. Dreams to be able to direct these
+                                wayward students to places that truly meet their every need. To be able to point them towards
+                                a location with just the right number of outlets, or to a place with just the right ratio
+                                of noise to quiet. Whatever your particular study preferances are, Spotty hopes to one day
+                                be able to bring you to your perfect spot.</p>
+                            </p>
+                        </div>
+                    </secton>
 
-
-<!-- !PAGE CONTENT! -->
-<div class="mainPage" style="margin-left:300px">
-
-  <!-- Header -->
-  <header id="Spotty">
-    <span class="filterBtn hide-large" onclick="sideOpen()"><i class="fa fa-bars"></i></span>
-    <div class="container">
-    <h1><b>Spotty</b></h1>
-    <div class="row" style="text-align: center;">
-          <div class="col">
-            <div id="homeButton">Home</div>
-          </div>
-          |
-          <div class="col">
-            <div id="howToButton">How It Works</div>
-          </div>
-          |
-          <div class="col">
-            <div id="contactButton">Contact</div>
-          </div>
-    </div>
-  </header>
-  
-<!-- Where Google Maps Functionality Lives -->
-    <section class="container">
-    <div id="home"><div id="googlemaps"></div></div>
-  </section>
-
-    <section class="container">
-    <div id="howTo">How To</div>
-  </section>
-      
-    <section class="container">
-    <div id="contact">Contact</div>
-  </section>
-<!-- End page content -->
-</div>
-<footer>
-
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-
-<script type="text/javascript">
-    </script>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+                </div>
 
 
+                <!-- Modal -->
+                <div id="myModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
 
-    <script src="./assets/javascript/script.js" type="text/javascript"></script>
-</footer>
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title text-center"><strong>Enter Zip Code</strong></h3>
+                                <button type="button" class="close" data-dismiss="modal" style="font-size: xx-large;">&times;</button>
+                            </div>
+                            <div class="modal-body text-center">
+                                <Label>ZIP Code: </Label><input id="inputField" type="text" pattern="[0-9]{5}" title="Five digit zip code" />
+                                <div class="contBtn text-center"><button id="continue"><span>Continue</span></button></div>
+                            </div>
+                            <div class="modal-footer">
+                            </div>
+                        </div>
 
-</body>
+                    </div>
+
+                </div>
+
+                <!-- /#page-content-wrapper -->
+            </div>
+            <!-- Footer -->
+            <div class="push"></div>
+        </div>
+        <div id="footer">
+            <div class="container text-center">
+                <span>&copy; Copyright 2017 Spotty Inc.</span>
+            </div>
+        </div>
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+        <script src="assets/js/vendor/jquery/jquery.min.js"></script>
+        <script src="assets/js/vendor/popper/popper.min.js"></script>
+        <script src="assets/js/vendor/bootstrap/js/bootstrap.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBu5nZKbeK-WHQ70oqOWo-_4VmwOwKP9YQ&libraries=places"></script>
+
+        <script src="https://cdn.firebase.com/libs/firebaseui/2.4.0/firebaseui.js"></script>
+
+
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+            crossorigin="anonymous"></script>
+        <script data-require="angular.js@1.4.3" data-semver="1.4.3" src="https://code.angularjs.org/1.4.3/angular.js"></script>
+        <!-- <script type="text/javascript"></script> -->
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        <script src="assets/js/java.js" type="text/javascript"></script>
+
+    </body>
+
 </html>
